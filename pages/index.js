@@ -1,10 +1,24 @@
 import Head from 'next/head'
-import React,{ useState } from 'react'
+import React,{ useState,useEffect } from 'react'
 import styles from '../styles/Home.module.css'
-
+import StudentMain from './StudentMain'
 export default function Home() {
   const [search,setSearch] = useState('')
   const [courses,setCourses] = useState(null)
+  const [students,setStudents] = useState([])
+  const [isCreate,setIsCreate] = useState(true)
+  const [_dni,setDni] = useState('')
+  const [_name,setNomalu] = useState('')
+  const [_lastname,setApealu] = useState('')
+  useEffect(()=>{
+    fetch('https://api-universidad-jmc.herokuapp.com/students').then(e=>e.json()).then(data=>{
+      if(data.code==200){
+        setStudents(data.data)
+        console.log(data.data)
+      }
+    })
+  },[])
+
   const onChangeHandler=(e)=>{
     setSearch(e.target.value.toUpperCase())
   }
@@ -14,7 +28,33 @@ export default function Home() {
           setCourses(data.data)
       })
   }
+  
+  const onAddStudent=(student)=>{
+    let temp = []
+    temp = [
+      ...students,
+      student
+    ]
+    setStudents(temp)
+  }
 
+  const deleteStudentHandler=(code)=>{
+    let temp = []
+    students.forEach(e=>{
+      if(e.CODALU!=code){
+        temp.push(e)
+      }
+    })
+    setStudents(temp)
+  }
+
+  const editStudentHandler=(student)=>{    
+      setIsCreate(false)
+      setDni(student.CODALU)
+      setNomalu(student.NOMALU)
+      setApealu(student.APEALU)
+      alert('Editando')
+  }
 
   const getProm=()=>{
     let temp=0,aux=0
@@ -35,11 +75,14 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <div className="flex flex-row ">
+        <StudentMain _dni={_dni} _name={_name} _lastname={_lastname} addStudent={onAddStudent} _isCreate={isCreate} />
+        <UserList data={students} editStudent={editStudentHandler} deleteStudent={deleteStudentHandler}/>        
+        </div>        
         <div>
           <input type="text" placeholder="Prueba" onChange={onChangeHandler} value={search}></input>
-          <button onClick={getcourses} >Revisar</button>          
+          <button className="bg-green p-2 rounded-md"onClick={getcourses} >Revisar</button>          
           {courses!=null?(<><List data={courses}/> <p>PROMEDIO: {getProm()}</p> </>):null}
-          
         </div>
       </main>
 
@@ -48,14 +91,100 @@ export default function Home() {
 }
 
 
+const UserList=({data,deleteStudent,editStudent})=>{
+  useEffect(()=>{
 
+  },[data.length])
+
+  const onClickHandle=(cod)=>{
+    if(cod.trim()!=""){      
+      fetch('https://api-universidad-jmc.herokuapp.com/students/'+cod,{
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'                    
+          },     
+      }).then(res=>res.json()).then(data=>{
+          if(data.code==200){
+              alert("ELIMINANDO")
+              deleteStudent(cod)
+          }
+      })
+  }
+  }
+
+  const onClickEditHandle=(student)=>{
+    editStudent(student)
+  }
+
+  return (
+    <div className="flex flex-col my-10">
+      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    CODIGO
+                  </th>        
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    NOMBRES
+                  </th>    
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    APELLIDOS
+                  </th>  
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    
+                  </th>  
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    
+                  </th>  
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {data.map((st) => (
+                  <tr key={st.CODALU}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{st.CODALU}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{st.NOMALU}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{st.APEALU}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button onClick={(e)=>{onClickHandle(st.CODALU)}}>Eliminar</button>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button onClick={(e)=>{onClickEditHandle({CODALU:st.CODALU,NOMALU:st.NOMALU,APEALU:st.APEALU})}}>Editar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 
 const List=({data})=>{
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col my-10">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
