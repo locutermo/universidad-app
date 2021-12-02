@@ -41,16 +41,16 @@ export default function StudentMain({addStudent,_dni,_name,_lastname,_isCreate})
         <div className="flex flex-row my-10">
              <div>
                 <label className="block text-sm font-medium text-gray-700">DNI</label>
-                <div class="mt-1 relative rounded-xs shadow-sm">                
-                    <input type="text" onChange={e=>{setDni(e.target.value)}} value={dni} name="dni" id="dni" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
+                <div className="mt-1 relative rounded-xs shadow-sm">                
+                    <input type="text" onChange={e=>{setDni(e.target.value)}} value={dni} name="dni" id="dni" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
                 </div>
                 <label className="block text-sm font-medium text-gray-700">Nombres</label>
-                <div class="mt-1 relative rounded-xs shadow-sm">                
-                    <input type="text" onChange={e=>{setName(e.target.value)}} value={name} name="name" id="name" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
+                <div className="mt-1 relative rounded-xs shadow-sm">                
+                    <input type="text" onChange={e=>{setName(e.target.value)}} value={name} name="name" id="name" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
                 </div>
                 <label className="block text-sm font-medium text-gray-700 my-2">Apellidos</label>
-                <div class="mt-1 relative rounded-xs shadow-sm">                
-                    <input type="text" onChange={e=>{setLastname(e.target.value)}} value={lastname} name="lastname" id="lastname" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
+                <div className="mt-1 relative rounded-xs shadow-sm">                
+                    <input type="text" onChange={e=>{setLastname(e.target.value)}} value={lastname} name="lastname" id="lastname" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 bg-gray-100 p-2 rounded-md" placeholder=""></input>
                 </div>
                 {isCreate?<button onClick={onclickHandler} className="my-4 bg-blue-500 p-2 rounded-md">Crear</button>:<button onClick={onClickUpdateHandler} className="my-4 bg-blue-500 p-2 rounded-md">Actualizar</button>}
             </div>
